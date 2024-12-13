@@ -15,13 +15,7 @@ const MainMenu = ({ route, navigation }: any) => {
       >
         View Book List
       </Button>
-      <Button
-        mode="contained"
-        // onPress={() => navigation.navigate('ScanBook')}
-        style={styles.button}
-      >
-        Scan Book Cover
-      </Button>
+    
       <Button
         mode="contained"
         onPress={() => navigation.navigate('AddBook')}

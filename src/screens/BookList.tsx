@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, View, StyleSheet } from 'react-native';
-import { TextInput, Button, Card } from 'react-native-paper';
+import { FlatList, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { TextInput, Card } from 'react-native-paper';
 import { collection, getDocs } from 'firebase/firestore';
 import { db, bookConverter } from '../firebaseConfig';
 import { Book } from '../types';
@@ -12,7 +12,6 @@ const BookList = ({ navigation }: any) => {
   const [filterBy, setFilterBy] = useState<'title' | 'authors' | 'isbn' | 'genre'>('title');
   const [sortBy, setSortBy] = useState<'title' | 'authors' | 'isbn' | 'genre'>('title');
 
-  // Firestore'dan kitapları çek
   const fetchBooks = async () => {
     try {
       const querySnapshot = await getDocs(
@@ -30,13 +29,10 @@ const BookList = ({ navigation }: any) => {
     fetchBooks();
   }, []);
 
-  // Arama ve Filtreleme İşlemi
   const handleSearch = () => {
     const lowerSearchText = searchText.toLowerCase();
-
     const filtered = books.filter(book => {
       let target = '';
-
       if (filterBy === 'authors') {
         target = book.authors.join(' ').toLowerCase();
       } else if (filterBy === 'isbn') {
@@ -44,14 +40,11 @@ const BookList = ({ navigation }: any) => {
       } else if (filterBy === 'title' || filterBy === 'genre') {
         target = book[filterBy]?.toLowerCase() || '';
       }
-
       return target.includes(lowerSearchText);
     });
-
     setFilteredBooks(filtered);
   };
 
-  // Sıralama İşlemi
   const handleSort = () => {
     const sorted = [...filteredBooks].sort((a, b) => {
       if (sortBy === 'authors') {
@@ -62,13 +55,22 @@ const BookList = ({ navigation }: any) => {
         return a[sortBy]?.localeCompare(b[sortBy] || '') || 0;
       }
     });
-
     setFilteredBooks(sorted);
+  };
+
+  const renderCustomButton = (label: string, isActive: boolean, onPress: () => void) => {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={[styles.button, isActive && styles.activeButton]}
+      >
+        <Text style={[styles.buttonText, isActive && styles.activeButtonText]}>{label}</Text>
+      </TouchableOpacity>
+    );
   };
 
   return (
     <View style={styles.container}>
-      {/* Arama ve Filtreleme Alanı */}
       <TextInput
         label="Search"
         value={searchText}
@@ -76,75 +78,23 @@ const BookList = ({ navigation }: any) => {
         style={styles.input}
       />
       <View style={styles.filterButtons}>
-        <Button
-          mode={filterBy === 'title' ? 'contained' : 'outlined'}
-          onPress={() => setFilterBy('title')}
-          style={styles.filterButton}
-        >
-          Title
-        </Button>
-        <Button
-          mode={filterBy === 'authors' ? 'contained' : 'outlined'}
-          onPress={() => setFilterBy('authors')}
-          style={styles.filterButton}
-        >
-          Authors
-        </Button>
-        <Button
-          mode={filterBy === 'isbn' ? 'contained' : 'outlined'}
-          onPress={() => setFilterBy('isbn')}
-          style={styles.filterButton}
-        >
-          ISBN
-        </Button>
-        <Button
-          mode={filterBy === 'genre' ? 'contained' : 'outlined'}
-          onPress={() => setFilterBy('genre')}
-          style={styles.filterButton}
-        >
-          Genre
-        </Button>
+        {renderCustomButton('Title', filterBy === 'title', () => setFilterBy('title'))}
+        {renderCustomButton('Authors', filterBy === 'authors', () => setFilterBy('authors'))}
+        {renderCustomButton('ISBN', filterBy === 'isbn', () => setFilterBy('isbn'))}
+        {renderCustomButton('Genre', filterBy === 'genre', () => setFilterBy('genre'))}
       </View>
-      <Button mode="contained" onPress={handleSearch} style={styles.searchButton}>
-        Search
-      </Button>
-
-      {/* Sıralama Alanı */}
+      <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+        <Text style={styles.searchButtonText}>Search</Text>
+      </TouchableOpacity>
       <View style={styles.sortButtons}>
-        <Button
-          mode={sortBy === 'title' ? 'contained' : 'outlined'}
-          onPress={() => setSortBy('title')}
-          style={styles.sortButton}
-        >
-          Title
-        </Button>
-        <Button
-          mode={sortBy === 'authors' ? 'contained' : 'outlined'}
-          onPress={() => setSortBy('authors')}
-          style={styles.sortButton}
-        >
-          Authors
-        </Button>
-        <Button
-          mode={sortBy === 'isbn' ? 'contained' : 'outlined'}
-          onPress={() => setSortBy('isbn')}
-          style={styles.sortButton}
-        >
-          ISBN
-        </Button>
-        <Button
-          mode={sortBy === 'genre' ? 'contained' : 'outlined'}
-          onPress={() => setSortBy('genre')}
-          style={styles.sortButton}
-        >
-          Genre
-        </Button>
+        {renderCustomButton('Title', sortBy === 'title', () => setSortBy('title'))}
+        {renderCustomButton('Authors', sortBy === 'authors', () => setSortBy('authors'))}
+        {renderCustomButton('ISBN', sortBy === 'isbn', () => setSortBy('isbn'))}
+        {renderCustomButton('Genre', sortBy === 'genre', () => setSortBy('genre'))}
       </View>
-      <Button mode="contained" onPress={handleSort} style={styles.sortButtonMain}>
-        Sort
-      </Button>
-
-      {/* Kitap Listesi */}
+      <TouchableOpacity style={styles.sortButtonMain} onPress={handleSort}>
+        <Text style={styles.sortButtonText}>Sort</Text>
+      </TouchableOpacity>
       <FlatList
         data={filteredBooks}
         keyExtractor={item => item.id}
@@ -174,24 +124,50 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginBottom: 20,
   },
-  filterButton: {
+  button: {
     flex: 1,
     marginHorizontal: 5,
+    padding: 10,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  activeButton: {
+    backgroundColor: 'purple',
+  },
+  buttonText: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  activeButtonText: {
+    color: 'white',
   },
   searchButton: {
+    padding: 10,
+    backgroundColor: 'purple',
+    borderRadius: 5,
+    alignItems: 'center',
     marginBottom: 20,
+  },
+  searchButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   sortButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 20,
   },
-  sortButton: {
-    flex: 1,
-    marginHorizontal: 5,
-  },
   sortButtonMain: {
+    padding: 10,
+    backgroundColor: 'purple',
+    borderRadius: 5,
+    alignItems: 'center',
     marginBottom: 20,
+  },
+  sortButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   card: {
     marginVertical: 8,

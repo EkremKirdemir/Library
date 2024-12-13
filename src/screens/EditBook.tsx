@@ -8,15 +8,14 @@ import { Book } from '../types';
 const EditBook = ({ route, navigation }: any) => {
   const { bookId, existingData }: { bookId: string; existingData: Book } = route.params;
 
-  // Mevcut bilgileri başlangıç değerleri olarak formda kullan
+
   const [title, setTitle] = useState(existingData.title);
   const [isbn, setIsbn] = useState(String(existingData.isbn));
   const [authors, setAuthors] = useState<string[]>(existingData.authors);
   const [authorInput, setAuthorInput] = useState('');
   const [genre, setGenre] = useState(existingData.genre);
-  const [coverUri, setCoverUri] = useState(existingData.coverUri || ''); // Null değer için boş string
+  const [coverUri, setCoverUri] = useState(existingData.coverUri || '');
 
-  // Kitap bilgilerini güncelleme
   const handleUpdateBook = async () => {
     if (!title || !isbn || authors.length === 0 || !genre) {
       Alert.alert('Validation Error', 'All fields are required.');
@@ -31,13 +30,13 @@ const EditBook = ({ route, navigation }: any) => {
     try {
       await updateDoc(doc(db, 'books', bookId), {
         title,
-        isbn: Number(isbn), // ISBN'i sayıya çevir
+        isbn: Number(isbn),
         authors,
         genre,
-        coverUri: coverUri || null, // Boş stringi tekrar null yap
+        coverUri: coverUri || null,
       });
       Alert.alert('Success', 'Book updated successfully!');
-      navigation.goBack(); // Geri dön
+      navigation.goBack();
     } catch (error) {
       console.error('Error updating book:', error);
       Alert.alert('Error', 'Failed to update book.');
@@ -57,9 +56,8 @@ const EditBook = ({ route, navigation }: any) => {
         value={isbn}
         onChangeText={setIsbn}
         style={styles.input}
-        keyboardType="numeric" // Sadece sayısal giriş
+        keyboardType="numeric"
       />
-      {/* Yazar ekleme */}
       <View style={styles.authorContainer}>
         <TextInput
           label="Add Author"
@@ -93,14 +91,12 @@ const EditBook = ({ route, navigation }: any) => {
         onChangeText={setGenre}
         style={styles.input}
       />
-      {/* Kitap kapağı URI */}
       <TextInput
         label="Cover URI"
         value={coverUri}
         onChangeText={setCoverUri}
         style={styles.input}
       />
-      {/* Kitap bilgilerini güncelle */}
       <Button mode="contained" onPress={handleUpdateBook} style={styles.button}>
         Update Book
       </Button>

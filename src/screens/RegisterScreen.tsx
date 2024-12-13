@@ -16,19 +16,19 @@ const RegisterScreen = ({ navigation }: any) => {
     }
 
     try {
-      // Salt rounds kullanımı
+
       const salt = bcrypt.genSaltSync(10);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
       await addDoc(collection(db, 'users'), {
         username,
         password: hashedPassword,
-        role: 'user', // Varsayılan olarak kullanıcı rolü
+        role: 'user',
         createdAt: new Date().toISOString(),
       });
 
       Alert.alert('Success', 'User registered successfully!');
-      navigation.navigate('Login'); // Login ekranına dön
+      navigation.navigate('Login');
     } catch (error: any) {
       console.error('Error registering user:', error.message);
       Alert.alert('Error', `Failed to register user: ${error.message}`);

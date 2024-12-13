@@ -18,25 +18,24 @@ const firebaseConfig = {
   measurementId: "G-VCT4TRRQQ7"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 export const db = getFirestore(app);
 export const bookConverter: FirestoreDataConverter<Book> = {
-    toFirestore(book: Book) {
-      return book;
-    },
-    fromFirestore(snapshot) {
-      const data = snapshot.data();
-      return {
-        id: snapshot.id,
-        title: data.title,
-        authors: data.authors,
-        isbn: data.isbn,
-        genre: data.genre,
-        coverUri: data.coverUri,
-        createdAt: data.createdAt,
-      };
-    },
-  };
+  toFirestore(book: Book) {
+    return book;
+  },
+  fromFirestore(snapshot) {
+    const data = snapshot.data();
+    return {
+      id: snapshot.id,
+      title: data.title,
+      authors: data.authors,
+      isbn: data.isbn,
+      genre: data.genre,
+      coverUri: data.coverUri,
+      createdAt: data.createdAt,
+    };
+  },
+};

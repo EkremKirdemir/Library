@@ -1,4 +1,3 @@
-// src/redux/booksSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Book {

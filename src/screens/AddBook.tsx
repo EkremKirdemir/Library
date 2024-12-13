@@ -13,7 +13,6 @@ const AddBook = ({ navigation }: any) => {
   const [genre, setGenre] = useState('');
   const [coverUri, setCoverUri] = useState('');
 
-  // Kitap kapağı seçmek için
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -27,7 +26,7 @@ const AddBook = ({ navigation }: any) => {
     }
   };
 
-  // Formu sıfırla
+
   const resetForm = () => {
     setTitle('');
     setIsbn('');
@@ -37,9 +36,9 @@ const AddBook = ({ navigation }: any) => {
     setCoverUri('');
   };
 
-  // Kitap ekleme işlemi
+
   const handleAddBook = async () => {
-    // Alanların doğrulanması
+
     if (!title || !isbn || authors.length === 0 || !genre || !coverUri) {
       Alert.alert('Validation Error', 'All fields are required.');
       return;
@@ -61,7 +60,7 @@ const AddBook = ({ navigation }: any) => {
       });
       Alert.alert('Success', 'Book added successfully!');
     } catch (error: any) {
-      console.error('Error adding book:', error.message); // Hata detayını konsola yazdırır
+      console.error('Error adding book:', error.message);
       Alert.alert('Error', `Failed to add book: ${error.message}`);
     }
   };
@@ -79,9 +78,8 @@ const AddBook = ({ navigation }: any) => {
         value={isbn}
         onChangeText={setIsbn}
         style={styles.input}
-        keyboardType="numeric" // Sadece sayısal giriş
+        keyboardType="numeric"
       />
-      {/* Yazar ekleme */}
       <View style={styles.authorContainer}>
         <TextInput
           label="Add Author"
@@ -115,14 +113,12 @@ const AddBook = ({ navigation }: any) => {
         onChangeText={setGenre}
         style={styles.input}
       />
-      {/* Kitap kapağı seçme */}
       <Button mode="outlined" onPress={pickImage}>
         {coverUri ? 'Change Cover Image' : 'Pick Cover Image'}
       </Button>
       {coverUri ? (
         <Image source={{ uri: coverUri }} style={styles.coverImage} />
       ) : null}
-      {/* Kitap ekleme */}
       <Button mode="contained" onPress={handleAddBook} style={styles.button}>
         Add Book
       </Button>

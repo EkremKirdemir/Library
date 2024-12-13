@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 
 const MainMenu = ({ route, navigation }: any) => {
-  const { role } = route.params; // Kullanıcı rolü (admin veya user)
+  const { role } = route.params;
 
   return (
     <View style={styles.container}>
@@ -15,7 +15,7 @@ const MainMenu = ({ route, navigation }: any) => {
       >
         View Book List
       </Button>
-    
+
       <Button
         mode="contained"
         onPress={() => navigation.navigate('AddBook')}

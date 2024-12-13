@@ -1,4 +1,3 @@
-// LoginScreen.js
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { TextInput, Button, Text } from 'react-native-paper';
@@ -41,12 +40,12 @@ const LoginScreen = ({ navigation }: any) => {
             Alert.alert('Error', 'An error occurred while verifying the password.');
             return;
           }
-      
+
           if (!isPasswordValid) {
             Alert.alert('Error', 'Invalid credentials');
             return;
           }
-      
+
           Alert.alert('Success', 'Logged in successfully!');
           navigation.navigate('MainMenu', { role: user.role || 'user' });
         });

@@ -46,7 +46,6 @@ const ManageBooks = ({ navigation }: any) => {
     );
   };
 
-  // Ekran odaklanınca fetchBooks'u çağır
   useFocusEffect(
     useCallback(() => {
       fetchBooks();

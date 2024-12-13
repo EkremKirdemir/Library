@@ -10,6 +10,7 @@ const BookList = ({ navigation }: any) => {
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [searchText, setSearchText] = useState('');
   const [filterBy, setFilterBy] = useState<'title' | 'authors' | 'isbn' | 'genre'>('title');
+  const [sortBy, setSortBy] = useState<'title' | 'authors' | 'isbn' | 'genre'>('title');
 
   // Firestore'dan kitapları çek
   const fetchBooks = async () => {
@@ -48,6 +49,21 @@ const BookList = ({ navigation }: any) => {
     });
 
     setFilteredBooks(filtered);
+  };
+
+  // Sıralama İşlemi
+  const handleSort = () => {
+    const sorted = [...filteredBooks].sort((a, b) => {
+      if (sortBy === 'authors') {
+        return a.authors[0]?.localeCompare(b.authors[0] || '');
+      } else if (sortBy === 'isbn') {
+        return String(a.isbn).localeCompare(String(b.isbn));
+      } else {
+        return a[sortBy]?.localeCompare(b[sortBy] || '') || 0;
+      }
+    });
+
+    setFilteredBooks(sorted);
   };
 
   return (
@@ -93,6 +109,41 @@ const BookList = ({ navigation }: any) => {
         Search
       </Button>
 
+      {/* Sıralama Alanı */}
+      <View style={styles.sortButtons}>
+        <Button
+          mode={sortBy === 'title' ? 'contained' : 'outlined'}
+          onPress={() => setSortBy('title')}
+          style={styles.sortButton}
+        >
+          Title
+        </Button>
+        <Button
+          mode={sortBy === 'authors' ? 'contained' : 'outlined'}
+          onPress={() => setSortBy('authors')}
+          style={styles.sortButton}
+        >
+          Authors
+        </Button>
+        <Button
+          mode={sortBy === 'isbn' ? 'contained' : 'outlined'}
+          onPress={() => setSortBy('isbn')}
+          style={styles.sortButton}
+        >
+          ISBN
+        </Button>
+        <Button
+          mode={sortBy === 'genre' ? 'contained' : 'outlined'}
+          onPress={() => setSortBy('genre')}
+          style={styles.sortButton}
+        >
+          Genre
+        </Button>
+      </View>
+      <Button mode="contained" onPress={handleSort} style={styles.sortButtonMain}>
+        Sort
+      </Button>
+
       {/* Kitap Listesi */}
       <FlatList
         data={filteredBooks}
@@ -128,6 +179,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   searchButton: {
+    marginBottom: 20,
+  },
+  sortButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  sortButton: {
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  sortButtonMain: {
     marginBottom: 20,
   },
   card: {

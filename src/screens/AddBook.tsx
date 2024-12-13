@@ -60,11 +60,9 @@ const AddBook = ({ navigation }: any) => {
         createdAt: new Date().toISOString(),
       });
       Alert.alert('Success', 'Book added successfully!');
-      resetForm(); // Formu sıfırla
-      navigation.goBack(); // Ana menüye dön
-    } catch (error) {
-      console.error('Error adding book: ', error);
-      Alert.alert('Error', 'Failed to add book.');
+    } catch (error: any) {
+      console.error('Error adding book:', error.message); // Hata detayını konsola yazdırır
+      Alert.alert('Error', `Failed to add book: ${error.message}`);
     }
   };
 

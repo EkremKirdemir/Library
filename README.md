@@ -54,11 +54,6 @@ Before you begin, ensure you have the following installed on your system:
    npm install
    ```
 
-   or, if using yarn:
-
-   ```bash
-   yarn install
-   ```
 
 ## Running the Application
 
@@ -70,24 +65,5 @@ Before you begin, ensure you have the following installed on your system:
 
 2. Open the Expo Go app on your phone or an emulator and scan the QR code displayed in the terminal or browser.
 
-## Testing
-
-This project uses Jest and React Native Testing Library for unit testing.
-
-### Running Tests
-
-1. To run tests, execute the following command:
-
-   ```bash
-   npm test
-   ```
-
-   or, if using yarn:
-
-   ```bash
-   yarn test
-   ```
-
-2. Test files are located in the `src/__tests__` directory.
 
 
